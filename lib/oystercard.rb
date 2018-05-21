@@ -15,4 +15,8 @@ class Oystercard
   def full?
     @balance >= MAXIMUM_BALANCE
   end
+
+  def deduct(amount)
+    @balance -= amount
+  end
 end
