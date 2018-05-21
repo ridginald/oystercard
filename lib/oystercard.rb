@@ -8,7 +8,7 @@ class Oystercard
   end
 
   def top_up(amount)
-    raise 'Balance cannot be above £90' if full?
+    raise "Balance cannot be above £ #{Oystercard::MAXIMUM_BALANCE}" if full?
     @balance += amount
   end
 
