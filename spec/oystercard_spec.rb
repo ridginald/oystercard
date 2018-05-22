@@ -23,7 +23,7 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
+  xdescribe '#deduct' do
     it 'deducts money from the balance' do
       expect { card.deduct(50) }.to change { card.balance }.by(-50)
     end
@@ -53,7 +53,7 @@ describe Oystercard do
     it 'changes status touch out' do
       card.top_up(2)
       card.touch_in
-      card.touch_out
+      expect { card.touch_out }.to change { card.balance }.by (-Oystercard::FARE)
       expect(card).to_not be_in_journey
     end
   end
