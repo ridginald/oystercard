@@ -2,6 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:card) { Oystercard.new }
+  let(:entry_station) { double :station }
 
   context '#balance' do
     it 'checks balance' do
@@ -32,11 +33,17 @@ describe Oystercard do
   describe '#touch_in' do
     it 'changes status touch in' do
       card.top_up(2)
-      card.touch_in
+      card.touch_in(entry_station)
       expect(card).to be_in_journey
     end
     it 'minimum balance' do
-      expect { card.touch_in }.to raise_error 'insufficent balance'
+      expect { card.touch_in(entry_station) }.to raise_error 'insufficent balance'
+    end
+    it 'holding entry station' do
+      expect(card.entry_station).to be nil
+      card.top_up(2)
+      card.touch_in(entry_station)
+      expect(card.entry_station).to be entry_station
     end
   end
 
@@ -44,7 +51,7 @@ describe Oystercard do
     it "checking in_journey status" do
       expect(card).to_not be_in_journey
       card.top_up(2)
-      card.touch_in
+      card.touch_in(entry_station)
       expect(card).to be_in_journey
     end
   end
@@ -52,9 +59,15 @@ describe Oystercard do
   describe '#touch_out' do
     it 'changes status touch out' do
       card.top_up(2)
-      card.touch_in
+      card.touch_in(entry_station)
       expect { card.touch_out }.to change { card.balance }.by (-Oystercard::FARE)
       expect(card).to_not be_in_journey
+    end
+    it 'leaving entry station' do
+      card.top_up(2)
+      card.touch_in(entry_station)
+      card.touch_out
+      expect(card.entry_station).to be nil
     end
   end
 end
