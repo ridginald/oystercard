@@ -3,6 +3,7 @@ require 'oystercard'
 describe Oystercard do
   subject(:card) { Oystercard.new }
   let(:entry_station) { double :station }
+  let(:exit_station) { double :station }
 
   context '#balance' do
     it 'checks balance' do
@@ -40,15 +41,16 @@ describe Oystercard do
       expect { card.touch_in(entry_station) }.to raise_error 'insufficent balance'
     end
     it 'holding entry station' do
-      expect(card.entry_station).to be nil
+      expect(card.journey_history).to be {}
       card.top_up(2)
       card.touch_in(entry_station)
-      expect(card.entry_station).to be entry_station
+      expect(card.journey_history[:entry]).to be entry_station
     end
   end
 
   describe '#in_journey' do
     it "checking in_journey status" do
+      p card.journey_history
       expect(card).to_not be_in_journey
       card.top_up(2)
       card.touch_in(entry_station)
@@ -60,14 +62,23 @@ describe Oystercard do
     it 'changes status touch out' do
       card.top_up(2)
       card.touch_in(entry_station)
-      expect { card.touch_out }.to change { card.balance }.by (-Oystercard::FARE)
+      expect { card.touch_out(exit_station) }.to change { card.balance }.by (-Oystercard::FARE)
       expect(card).to_not be_in_journey
     end
     it 'leaving entry station' do
       card.top_up(2)
       card.touch_in(entry_station)
-      card.touch_out
-      expect(card.entry_station).to be nil
+      card.touch_out(exit_station)
+      expect(card.journey_history[:exit]).to be exit_station
     end
+  end
+
+  it 'journey history' do
+    expect(card.journey_history).to be {}
+    card.top_up(2)
+    card.touch_in(entry_station)
+    card.touch_out(exit_station)
+    expect(card.journey_history[:entry]).to be entry_station
+    expect(card.journey_history[:exit]).to be exit_station
   end
 end
