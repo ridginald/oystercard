@@ -1,6 +1,7 @@
 class Oystercard
   DEFAULT_VALUE = 0
   MAXIMUM_BALANCE = 90
+  FARE = 1
   attr_reader :balance, :status
 
   def initialize(balance = DEFAULT_VALUE)
@@ -22,11 +23,12 @@ class Oystercard
   end
 
   def touch_in
+    raise "insufficent balance" if @balance < FARE
     @in_journey = true
   end
 
   def in_journey?
-    @in_journey 
+    @in_journey
   end
 
   def touch_out
