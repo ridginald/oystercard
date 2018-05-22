@@ -3,7 +3,7 @@ require 'oystercard'
 describe Oystercard do
   subject(:card) { Oystercard.new }
 
-  context 'balance' do
+  context '#balance' do
     it 'checks balance' do
       expect(card.balance).to eq(0)
     end
@@ -26,6 +26,29 @@ describe Oystercard do
   describe '#deduct' do
     it 'deducts money from the balance' do
       expect { card.deduct(50) }.to change { card.balance }.by(-50)
+    end
+  end
+
+  describe '#touch_in' do
+    it 'changes status touch in' do
+      card.touch_in
+      expect(card).to be_in_journey
+    end
+  end
+
+  describe '#in_journey' do
+    it "checking in_journey status" do
+      expect(card).to_not be_in_journey
+      card.touch_in
+      expect(card).to be_in_journey
+    end
+  end
+
+  describe '#touch_out' do
+    it 'changes status touch out' do
+      card.touch_in
+      card.touch_out
+      expect(card).to_not be_in_journey
     end
   end
 end
