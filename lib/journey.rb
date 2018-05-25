@@ -22,5 +22,6 @@ class Journey
   end
 
   def complete?
+    !@en_route 
   end
 end

@@ -18,6 +18,15 @@ describe Journey do
         expect(journey.fare).to eq Journey::PENALTY_FARE
       end
     end
+    describe '#complete' do
+      it 'returns true when the journey is open' do
+        expect(journey.complete?).to eq false
+      end
+      it 'returns false when the journey is closed' do
+        journey.finish("Brook Green")
+        expect(journey.complete?).to eq true
+      end
+    end
   end
 
   context 'initializes with an entry_station' do
