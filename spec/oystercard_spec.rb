@@ -50,7 +50,6 @@ describe Oystercard do
 
   describe '#in_journey' do
     it "checking in_journey status" do
-      p card.journey_history
       expect(card).to_not be_in_journey
       card.top_up(2)
       card.touch_in(entry_station)
